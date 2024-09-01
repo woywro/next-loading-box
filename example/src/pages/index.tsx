@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { LoadingBox } from 'next-loading-box';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
