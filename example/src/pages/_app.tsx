@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Header } from '@/components/Header';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { LoadingBox } from 'next-loading-box12';
+import { LoadingBox } from 'next-loading-box';
 
 export default function App({ Component, pageProps }: AppProps) {
   // State to manage the toggles for animations

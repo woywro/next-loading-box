@@ -1,4 +1,4 @@
-import { LoadingBox } from 'next-loading-box12';
+import { LoadingBox } from 'next-loading-box';
 import Link from 'next/link';
 
 export const Header = () => {
