@@ -8,13 +8,15 @@
   </p>
 </div>
 
+⚠️ This is designed for Pages Router. The App Router provides built-in support for Loading UI. For more information, check out the Next.js documentation on Loading UI and Streaming.
+
 ## 📄 Motivation
 
 In Next.js applications, server-side rendering (SSR) can sometimes be slow due to heavy computations, complex data fetching, or large payloads. These delays can leave users waiting without visual feedback while navigating between pages, leading to a poor user experience.
 
 <b>next-link-loading-box</b> was created to solve this problem by providing an intuitive and customizable loading wrapper that seamlessly integrates with the Next.js routing.
 
-This component simplifies managing loading states by eliminating the need for extensive boilerplate code and allowing any component to be used as a loading indicator, with configurable delays for animations. By delivering instant feedback during slow server-side rendering, next-link-loading-box boosts the perceived performance of your application, keeping users engaged and reassured that their interactions are being processed.
+This component simplifies managing loading states by eliminating the need for extensive boilerplate code and allowing any component to be used as a loading indicator, with configurable delays for animations. By delivering instant feedback during slow prerendering, next-link-loading-box boosts the perceived performance of your application, keeping users engaged and reassured that their interactions are being processed.
 
 <div align="center">
   <img src="https://github.com/woywro/next-loading-box/raw/main/gif.gif?raw=true" alt="example" />
@@ -74,5 +76,4 @@ import { LoadingBox } from 'next-loading-box';
 
 ### Todo
 
-- [ ] App directory support
-- [ ] NProgress support
+- [ ] NProgress loading bar example
