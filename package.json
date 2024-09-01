@@ -1,6 +1,6 @@
 {
   "name": "next-loading-box",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component designed for Next.js to manage route change loading states.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

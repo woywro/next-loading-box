@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/woywro/next-loading-box/compare/v1.0.0...v1.0.1) (2024-09-01)
+
+
+### Bug Fixes
+
+* package name ([eb69129](https://github.com/woywro/next-loading-box/commit/eb69129fa8ff777f602b4d5cc4d105ea14eabcee))
+
 # 1.0.0 (2024-09-01)
 
 
