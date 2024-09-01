@@ -1,0 +1,7 @@
+node_modules
+lib
+coverage
+.vscode
+.DS_Store
+dist
+report.json

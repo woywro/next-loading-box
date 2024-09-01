@@ -1,0 +1,53 @@
+{
+  "name": "next-loading-box21",
+  "version": "1.0.0",
+  "description": "React component designed for Next.js to manage route change loading states.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "author": {
+    "name": "Wojciech Wrotek",
+    "email": "wojtek@wrotek.pl"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woywro/next-loading-box"
+  },
+  "bugs": {
+    "url": "https://github.com/woywro/next-loading-box"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
+    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=12.0"
+  },
+  "keywords": [
+    "react",
+    "nextjs",
+    "loading-state",
+    "ssr",
+    "next-link"
+  ],
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.2.24",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "tsup": "^8.2.4",
+    "typescript": "4.5.5"
+  },
+  "peerDependencies": {
+    "next": ">=12",
+    "react": ">=18"
+  }
+}
