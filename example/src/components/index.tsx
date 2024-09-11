@@ -14,6 +14,7 @@ export interface LoadingBoxProps {
   className?: string;
   shallowRouting?: boolean;
   disableSameURL?: boolean;
+  global?: boolean;
 }
 
 const LoadingBox = memo(
@@ -25,6 +26,7 @@ const LoadingBox = memo(
     className,
     shallowRouting = false,
     disableSameURL = true,
+    global = false,
   }: LoadingBoxProps) => {
     const [showLoading, setShowLoading] = useState(false);
     const [currentLoadingComponent, setCurrentLoadingComponent] =
@@ -80,35 +82,50 @@ const LoadingBox = memo(
         }
       };
 
-      const handleRouteChangeEnd = () => {
+      const handleRouteChangeComplete = () => {
         clearTimeout(timeoutId);
         setShowLoading(false);
         setCurrentLoadingComponent(null);
       };
 
-      router.events.on('routeChangeStart', handleRouteChangeStart);
-      router.events.on('routeChangeComplete', handleRouteChangeEnd);
-      router.events.on('routeChangeError', handleRouteChangeEnd);
+      const handleRouteChangeError = (err: Error) => {
+        clearTimeout(timeoutId);
+        setShowLoading(false);
+        setCurrentLoadingComponent(null);
+      };
 
+      // Always listen to route changes if 'global' is true
+      if (global) {
+        router.events.on('routeChangeStart', handleRouteChangeStart);
+        router.events.on('routeChangeComplete', handleRouteChangeComplete);
+        router.events.on('routeChangeError', handleRouteChangeError);
+      }
+
+      // Clean up listeners on unmount or when dependencies change
       return () => {
-        router.events.off('routeChangeStart', handleRouteChangeStart);
-        router.events.off('routeChangeComplete', handleRouteChangeEnd);
-        router.events.off('routeChangeError', handleRouteChangeEnd);
+        if (global) {
+          router.events.off('routeChangeStart', handleRouteChangeStart);
+          router.events.off('routeChangeComplete', handleRouteChangeComplete);
+          router.events.off('routeChangeError', handleRouteChangeError);
+        }
         clearTimeout(timeoutId);
       };
     }, [
       loadingComponent,
       animateAfter,
       router,
-      children,
       shallowRouting,
       disableSameURL,
+      global,
+      // children,
     ]);
 
-    if (!children) {
+    if (global) {
       return showLoading && currentLoadingComponent ? (
         <>{currentLoadingComponent}</>
-      ) : null;
+      ) : (
+        <>{children}</>
+      );
     }
 
     return (
@@ -125,7 +142,9 @@ const LoadingBox = memo(
   (prevProps, nextProps) => {
     return (
       prevProps?.shallowRouting === nextProps?.shallowRouting &&
-      prevProps?.disableSameURL === nextProps?.disableSameURL
+      prevProps?.disableSameURL === nextProps?.disableSameURL &&
+      prevProps?.global === nextProps?.global &&
+      prevProps?.children === nextProps?.children
     );
   }
 );

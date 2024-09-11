@@ -114,10 +114,9 @@ export default function App({ Component, pageProps }: AppProps) {
             )}
             <Header />
             <div className="relative overflow-auto flex-grow">
-              {showSkeleton && (
-                <LoadingBox loadingComponent={loadingComponents} />
-              )}
-              <Component {...pageProps} />
+              <LoadingBox loadingComponent={loadingComponents} global>
+                <Component {...pageProps} />
+              </LoadingBox>
             </div>
           </div>
         </div>
