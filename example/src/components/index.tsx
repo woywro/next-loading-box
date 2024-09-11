@@ -133,6 +133,3 @@ const LoadingBox = memo(
 LoadingBox.displayName = 'LoadingBox';
 
 export { LoadingBox };
-
-export * from './ProductListSkeleton';
-export * from './ProductDetailSkeleton';

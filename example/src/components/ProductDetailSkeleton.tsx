@@ -2,7 +2,7 @@ import React from 'react';
 
 export const ProductDetailSkeleton: React.FC = () => {
   return (
-    <div className="absolute left-0 top-0 w-full bg-white h-full p-4 z-50">
+    <div className="absolute left-0 top-0 w-full bg-white h-full p-4 z-50 space-y-4">
       <div className="flex space-x-4">
         <div className="w-1/2">
           <div className="bg-gray-200 w-full h-96 rounded"></div>
