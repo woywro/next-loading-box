@@ -1,9 +1,6 @@
-import { useRouter } from 'next/router';
 import React from 'react';
 
 const BlogPost: React.FC = () => {
-  const router = useRouter();
-
   return (
     <div className="w-full p-4">
       <h1 className="text-3xl font-bold mb-2">Sample Blog Post</h1>

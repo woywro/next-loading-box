@@ -26,9 +26,6 @@ const LoadingBox = memo(
     shallowRouting = false,
     disableSameURL = true,
   }: LoadingBoxProps) => {
-    const [loadingElementId, setLoadingElementId] = useState<string | null>(
-      null
-    );
     const [showLoading, setShowLoading] = useState(false);
     const [currentLoadingComponent, setCurrentLoadingComponent] =
       useState<React.ReactNode | null>(null);
@@ -73,7 +70,6 @@ const LoadingBox = memo(
 
       const handleRouteChangeEnd = () => {
         clearTimeout(timeoutId);
-        setLoadingElementId(null);
         setShowLoading(false);
         setCurrentLoadingComponent(null);
       };

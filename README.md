@@ -73,7 +73,3 @@ import { LoadingBox } from 'next-loading-box';
   <LoadingBox loadingComponent={<LoadingSpinner />} />
 </div>;
 ```
-
-### Todo
-
-- [ ] NProgress loading bar example
