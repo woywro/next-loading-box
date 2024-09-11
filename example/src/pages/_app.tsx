@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const loadingComponents = [
     { path: '/blogPost', component: <BlogPostSkeleton /> },
-    { path: '/product/[id]', component: <ProductSkeleton /> },
+    { path: '/product', component: <ProductSkeleton /> },
     // Add more path-specific loading components here
   ];
 
@@ -114,7 +114,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Header />
             <div className="relative overflow-auto flex-grow">
               {showSkeleton && (
-                <LoadingBox loadingComponent={loadingComponents}></LoadingBox>
+                <LoadingBox loadingComponent={loadingComponents} />
               )}
               <Component {...pageProps} />
             </div>
