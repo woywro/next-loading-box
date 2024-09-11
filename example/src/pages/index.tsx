@@ -7,10 +7,9 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   return (
-    <div className="h-full w-full flex items-center justify-center">
+    <div className="h-full w-full flex items-center flex-col justify-center gap-3">
       {/* Blur Background with Spinner */}
       <LoadingBox
-        animateAfter={0}
         loadingComponent={
           <>
             <div className="absolute inset-0 w-full h-full bg-white bg-opacity-90 z-10 filter blur-sm"></div>
@@ -21,8 +20,8 @@ export default function Home() {
         }
       >
         <Link
-          href="/slowLoadingPage"
-          className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 my-32"
+          href="/blogPost"
+          className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100"
         >
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
             I'm a Single Post
@@ -34,6 +33,19 @@ export default function Home() {
           </p>
         </Link>
       </LoadingBox>
+      <Link
+        href="/product"
+        className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100"
+      >
+        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+          Product Page
+        </h5>
+        <p className="font-normal text-gray-700">
+          This is an example of a single post that could represent a blog post,
+          an article, or any other content. Click here to read more about this
+          fascinating topic!
+        </p>
+      </Link>
     </div>
   );
 }

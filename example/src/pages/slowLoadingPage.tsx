@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router';
 
 export const getServerSideProps = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   return { props: {} };
 };
 
