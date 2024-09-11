@@ -1,8 +1,9 @@
+import { LoadingBox } from '@/components';
 import { Header } from '@/components/Header';
 import { BlogPostSkeleton } from '@/components/blogPostSkeleton';
-import { ProductSkeleton } from '@/components/productSkeleton';
+import { ProductListSkeleton } from '@/components/ProductListSkeleton';
+import { ProductDetailSkeleton } from '@/components/ProductDetailSkeleton';
 import '@/styles/globals.css';
-import { LoadingBox } from 'next-loading-box';
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
 
@@ -39,8 +40,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const loadingComponents = [
     { path: '/blogPost', component: <BlogPostSkeleton /> },
-    { path: '/product', component: <ProductSkeleton /> },
-    // Add more path-specific loading components here
+    { path: '/products', component: <ProductListSkeleton /> },
+    { path: '/products/*', component: <ProductDetailSkeleton /> },
   ];
 
   return (

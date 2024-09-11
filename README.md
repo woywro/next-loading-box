@@ -73,3 +73,7 @@ import { LoadingBox } from 'next-loading-box';
   <LoadingBox loadingComponent={<LoadingSpinner />} />
 </div>;
 ```
+
+### Usage with Multiple Loading Components and Dynamic Routes
+
+You can use multiple loading components based on different routes, including dynamic routes:
