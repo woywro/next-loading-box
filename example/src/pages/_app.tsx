@@ -1,4 +1,4 @@
-import { LoadingBox } from '@/components';
+import { LoadingBox } from 'next-loading-box';
 import { Header } from '@/components/Header';
 import { BlogPostSkeleton } from '@/components/blogPostSkeleton';
 import { ProductListSkeleton } from '@/components/ProductListSkeleton';

@@ -90,7 +90,7 @@ const LoadingBox = memo(
         setCurrentLoadingComponent(null);
       };
 
-      const handleRouteChangeError = (err: Error) => {
+      const handleRouteChangeError = () => {
         clearTimeout(timeoutId);
         setShowLoading(false);
         setCurrentLoadingComponent(null);
