@@ -15,6 +15,7 @@ export interface LoadingBoxProps {
   shallowRouting?: boolean;
   disableSameURL?: boolean;
   global?: boolean;
+  addToChildren?: boolean; // New prop
 }
 
 const LoadingBox = memo(
@@ -27,6 +28,7 @@ const LoadingBox = memo(
     shallowRouting = false,
     disableSameURL = true,
     global = false,
+    addToChildren = false,
   }: LoadingBoxProps) => {
     const [showLoading, setShowLoading] = useState(false);
     const [currentLoadingComponent, setCurrentLoadingComponent] =
@@ -121,6 +123,14 @@ const LoadingBox = memo(
     ]);
 
     if (global) {
+      if (addToChildren) {
+        return (
+          <>
+            {children}
+            {showLoading && currentLoadingComponent}
+          </>
+        );
+      }
       return showLoading && currentLoadingComponent ? (
         <>{currentLoadingComponent}</>
       ) : (
@@ -144,6 +154,7 @@ const LoadingBox = memo(
       prevProps?.shallowRouting === nextProps?.shallowRouting &&
       prevProps?.disableSameURL === nextProps?.disableSameURL &&
       prevProps?.global === nextProps?.global &&
+      prevProps?.addToChildren === nextProps?.addToChildren && // New comparison
       prevProps?.children === nextProps?.children
     );
   }

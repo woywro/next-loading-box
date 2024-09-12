@@ -44,6 +44,29 @@ export default function App({ Component, pageProps }: AppProps) {
     { path: '/products/*', component: <ProductDetailSkeleton /> },
   ];
 
+  const getLoadingComponent = () => {
+    if (showSkeleton) {
+      return loadingComponents;
+    } else if (showTopLoading) {
+      return (
+        <div className="absolute z-10 h-1 left-0 top-0 w-full">
+          <div className="w-full">
+            <div className="h-0.5 w-full bg-pink-100 overflow-hidden">
+              <div className="animate-progress w-full h-full bg-pink-500 origin-left-right"></div>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (showSpinner) {
+      return (
+        <div className="absolute right-1 bottom-1">
+          <div className="w-3 h-3 rounded-full animate-spin border-2 border-solid border-pink-500 border-t-transparent"></div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-center p-4">
       <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-4">
@@ -90,31 +113,13 @@ export default function App({ Component, pageProps }: AppProps) {
             </div>
           </div>
           <div className="flex flex-col text-xs relative flex-grow overflow-auto">
-            {showTopLoading && (
-              <div className="absolute z-10 h-1 left-0 top-0 w-full">
-                <LoadingBox
-                  loadingComponent={
-                    <div className="w-full">
-                      <div className="h-0.5 w-full bg-pink-100 overflow-hidden">
-                        <div className="animate-progress w-full h-full bg-pink-500 origin-left-right"></div>
-                      </div>
-                    </div>
-                  }
-                />
-              </div>
-            )}
-            {showSpinner && (
-              <div className="absolute right-1 bottom-1">
-                <LoadingBox
-                  loadingComponent={
-                    <div className="w-3 h-3 rounded-full animate-spin border-2 border-solid border-pink-500 border-t-transparent"></div>
-                  }
-                />
-              </div>
-            )}
             <Header />
             <div className="relative overflow-auto flex-grow">
-              <LoadingBox loadingComponent={loadingComponents} global>
+              <LoadingBox
+                loadingComponent={getLoadingComponent()}
+                global
+                addToChildren={showTopLoading || showSpinner}
+              >
                 <Component {...pageProps} />
               </LoadingBox>
             </div>
