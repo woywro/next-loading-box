@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/woywro/next-loading-box/compare/v1.1.0...v1.1.1) (2024-09-12)
+
+
+### Bug Fixes
+
+* build error ([4984b23](https://github.com/woywro/next-loading-box/commit/4984b23623a891a76a776759b87c354d7309be48))
+
 # [1.1.0](https://github.com/woywro/next-loading-box/compare/v1.0.1...v1.1.0) (2024-09-12)
 
 
