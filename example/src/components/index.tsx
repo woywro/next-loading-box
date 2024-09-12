@@ -15,7 +15,7 @@ export interface LoadingBoxProps {
   shallowRouting?: boolean;
   disableSameURL?: boolean;
   global?: boolean;
-  addToChildren?: boolean; // New prop
+  addToChildren?: boolean;
 }
 
 const LoadingBox = memo(
@@ -96,14 +96,12 @@ const LoadingBox = memo(
         setCurrentLoadingComponent(null);
       };
 
-      // Always listen to route changes if 'global' is true
       if (global) {
         router.events.on('routeChangeStart', handleRouteChangeStart);
         router.events.on('routeChangeComplete', handleRouteChangeComplete);
         router.events.on('routeChangeError', handleRouteChangeError);
       }
 
-      // Clean up listeners on unmount or when dependencies change
       return () => {
         if (global) {
           router.events.off('routeChangeStart', handleRouteChangeStart);
@@ -119,7 +117,6 @@ const LoadingBox = memo(
       shallowRouting,
       disableSameURL,
       global,
-      // children,
     ]);
 
     if (global) {
@@ -154,7 +151,7 @@ const LoadingBox = memo(
       prevProps?.shallowRouting === nextProps?.shallowRouting &&
       prevProps?.disableSameURL === nextProps?.disableSameURL &&
       prevProps?.global === nextProps?.global &&
-      prevProps?.addToChildren === nextProps?.addToChildren && // New comparison
+      prevProps?.addToChildren === nextProps?.addToChildren &&
       prevProps?.children === nextProps?.children
     );
   }

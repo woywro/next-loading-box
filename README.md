@@ -8,15 +8,23 @@
   </p>
 </div>
 
-⚠️ This is designed for Pages Router. The App Router provides built-in support for Loading UI. For more information, check out the Next.js documentation on Loading UI and Streaming.
+⚠️ This component is designed for the Pages Router in Next.js. If you're using the App Router, it provides built-in support for Loading UI. For more information, refer to the Next.js documentation on Loading UI and Streaming.
 
 ## 📄 Motivation
 
-In Next.js applications, server-side rendering (SSR) can sometimes be slow due to heavy computations, complex data fetching, or large payloads. These delays can leave users waiting without visual feedback while navigating between pages, leading to a poor user experience.
+Next.js applications using server-side rendering (SSR) can sometimes experience delays due to complex computations, data fetching, or large payloads. These delays can result in users waiting without visual feedback during page navigation, leading to a poor user experience.
 
-<b>next-link-loading-box</b> was created to solve this problem by providing an intuitive and customizable loading wrapper that seamlessly integrates with the Next.js routing.
+<b>next-loading-box</b> addresses this issue by providing an intuitive and customizable loading wrapper that integrates seamlessly with Next.js routing.
 
-This component simplifies managing loading states by eliminating the need for extensive boilerplate code and allowing any component to be used as a loading indicator, with configurable delays for animations. By delivering instant feedback during slow prerendering, next-link-loading-box boosts the perceived performance of your application, keeping users engaged and reassured that their interactions are being processed.
+Key benefits of using next-loading-box:
+
+1. Simplifies loading state management
+2. Eliminates the need for extensive boilerplate code
+3. Allows any component to be used as a loading indicator
+4. Offers configurable animation delays
+5. Provides instant feedback during slow prerendering
+
+By implementing next-loading-box, you can enhance the perceived performance of your application, keeping users engaged and informed about ongoing processes during navigation.
 
 <div align="center">
   <img src="https://github.com/woywro/next-loading-box/raw/main/gif.gif?raw=true" alt="example" />
@@ -36,44 +44,92 @@ yarn add next-loading-box
 
 ## 🚀 Usage
 
-### Scoped Loader (e.g., Spinner, Overlay, etc.)
+### Scoped Loader (For e.g. Spinner, Overlay, etc.)
 
 A "scoped loader" is used for displaying loading indicators, such as spinners or overlays, within specific components of a page. Unlike a global loader, the scoped loader only affects the Link it wraps.
 
-```ts
+```tsx
 import { LoadingBox } from 'next-loading-box';
 
-<LoadingBox
-  // The delay in milliseconds before showing the loading component (e.g., 1000 = 1 second).
-  // If the route changes before this time, the loading component won't be shown.
-  animateAfter={1000}
-  // Enables loading state for shallow routing (i.e., navigation without a full page reload).
-  // Default is false.
-  shallowRouting={false}
-  // Disables the loading state when navigating to the same URL.
-  // Note: Query parameters are considered part of the URL.
-  disableSameUrl={true}
-  // An object to apply inline styles directly to a wrapper element.
-  style={{ width: '100%', height: '100%', display: 'flex' }}
-  // Custom loading component to be displayed (e.g., overlay, spinner, progress bar, etc.).
-  loadingComponent={<LoadingComponent />}
->
-  <Link href="/slowLoadingPage">With Loader</Link>
-</LoadingBox>;
+const MyComponent = () => {
+  return (
+    <div>
+      <h1>My Component</h1>
+      <LoadingBox loadingComponent={<LoadingComponent />}>
+        <Link href="/slowLoadingPage">With Loader</Link>
+      </LoadingBox>
+      {/* Other component content */}
+    </div>
+  );
+};
+
+export default MyComponent;
 ```
 
-### Global Loader (Displayed on Every Page Load)
-
-If you do not pass any children to the LoadingBox, it is treated as a global loader. In the example below, a spinner is displayed in the bottom right corner of the window whenever a user loads a new page. <b>Note</b> that the style prop will not change anything here since the LoadingBox does not wrap any content.
-
-```ts
-import { LoadingBox } from 'next-loading-box';
-
-<div className="absolute right-1 bottom-1">
-  <LoadingBox loadingComponent={<LoadingSpinner />} />
-</div>;
-```
-
-### Usage with Multiple Loading Components and Dynamic Routes
+### Global Loader with Multiple Loading Components (For e.g. Skeleton UI)
 
 You can use multiple loading components based on different routes, including dynamic routes:
+
+```tsx
+// _app.tsx
+import { AppProps } from 'next/app';
+import { LoadingBox } from 'next-loading-box';
+import BlogPostSkeleton from '../components/BlogPostSkeleton';
+import ProductListSkeleton from '../components/ProductListSkeleton';
+import ProductDetailSkeleton from '../components/ProductDetailSkeleton';
+
+const loadingComponents = [
+  { path: '/blogPost', component: <BlogPostSkeleton /> },
+  { path: '/products', component: <ProductListSkeleton /> },
+  { path: '/products/', component: <ProductDetailSkeleton /> },
+];
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <LoadingBox loadingComponent={loadingComponents} global>
+      <Component {...pageProps} />
+    </LoadingBox>
+  );
+}
+
+export default MyApp;
+```
+
+### Global Loader with Additive Loading (For e.g. Top Loading Bar)
+
+To add loading components to existing children instead of replacing them, use the `addToChildren` prop:
+
+```tsx
+// _app.tsx
+import { AppProps } from 'next/app';
+import { LoadingBox } from 'next-loading-box';
+import TopLoadingBar from '../components/TopLoadingBar'; // Adjust the import path as needed
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <LoadingBox loadingComponent={<TopLoadingBar />} global addToChildren>
+      <Component {...pageProps} />
+    </LoadingBox>
+  );
+}
+
+export default MyApp;
+```
+
+## 🔧 Props
+
+| Prop               | Type                                          | Default | Description                                                                                                     |
+| ------------------ | --------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- |
+| `loadingComponent` | `React.ReactNode \| LoadingComponentConfig[]` | -       | The loading component to display. Can be a single component or an array of components with path configurations. |
+| `children`         | `React.ReactNode`                             | -       | The child components to wrap.                                                                                   |
+| `animateAfter`     | `number`                                      | `0`     | Delay in milliseconds before showing the loading component.                                                     |
+| `style`            | `CSSProperties`                               | -       | Inline styles for the wrapper element.                                                                          |
+| `className`        | `string`                                      | -       | CSS class for the wrapper element.                                                                              |
+| `shallowRouting`   | `boolean`                                     | `false` | Enable loading state for shallow routing.                                                                       |
+| `disableSameURL`   | `boolean`                                     | `true`  | Disable loading state when navigating to the same URL.                                                          |
+| `global`           | `boolean`                                     | `false` | Use as a global loader for all route changes.                                                                   |
+| `addToChildren`    | `boolean`                                     | `false` | Add loading component to existing children instead of replacing them (only for global loaders).                 |
+
+## 📄 License
+
+next-loading-box is [MIT licensed](./LICENSE).

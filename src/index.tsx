@@ -14,6 +14,8 @@ export interface LoadingBoxProps {
   className?: string;
   shallowRouting?: boolean;
   disableSameURL?: boolean;
+  global?: boolean;
+  addToChildren?: boolean;
 }
 
 const LoadingBox = memo(
@@ -25,12 +27,29 @@ const LoadingBox = memo(
     className,
     shallowRouting = false,
     disableSameURL = true,
+    global = false,
+    addToChildren = false,
   }: LoadingBoxProps) => {
     const [showLoading, setShowLoading] = useState(false);
     const [currentLoadingComponent, setCurrentLoadingComponent] =
       useState<React.ReactNode | null>(null);
     const router = useRouter();
     let timeoutId: NodeJS.Timeout;
+
+    const matchPath = (pattern: string, path: string): boolean => {
+      const patternParts = pattern.split('/');
+      const pathParts = path.split('/');
+
+      if (patternParts.length !== pathParts.length) {
+        return false;
+      }
+
+      return patternParts.every((part, index) => {
+        if (part === '*') return true;
+        if (part.startsWith('[') && part.endsWith(']')) return true;
+        return part === pathParts[index];
+      });
+    };
 
     useEffect(() => {
       const handleRouteChangeStart = (
@@ -47,11 +66,8 @@ const LoadingBox = memo(
         let componentToShow: React.ReactNode | null = null;
 
         if (Array.isArray(loadingComponent)) {
-          const matchingConfig = loadingComponent.find(
-            (config): config is LoadingComponentConfig =>
-              'path' in config &&
-              typeof config.path === 'string' &&
-              url.startsWith(config.path)
+          const matchingConfig = loadingComponent.find((config) =>
+            matchPath(config.path, url)
           );
           if (matchingConfig) {
             componentToShow = matchingConfig.component;
@@ -68,35 +84,55 @@ const LoadingBox = memo(
         }
       };
 
-      const handleRouteChangeEnd = () => {
+      const handleRouteChangeComplete = () => {
         clearTimeout(timeoutId);
         setShowLoading(false);
         setCurrentLoadingComponent(null);
       };
 
-      router.events.on('routeChangeStart', handleRouteChangeStart);
-      router.events.on('routeChangeComplete', handleRouteChangeEnd);
-      router.events.on('routeChangeError', handleRouteChangeEnd);
+      const handleRouteChangeError = (err: Error) => {
+        clearTimeout(timeoutId);
+        setShowLoading(false);
+        setCurrentLoadingComponent(null);
+      };
+
+      if (global) {
+        router.events.on('routeChangeStart', handleRouteChangeStart);
+        router.events.on('routeChangeComplete', handleRouteChangeComplete);
+        router.events.on('routeChangeError', handleRouteChangeError);
+      }
 
       return () => {
-        router.events.off('routeChangeStart', handleRouteChangeStart);
-        router.events.off('routeChangeComplete', handleRouteChangeEnd);
-        router.events.off('routeChangeError', handleRouteChangeEnd);
+        if (global) {
+          router.events.off('routeChangeStart', handleRouteChangeStart);
+          router.events.off('routeChangeComplete', handleRouteChangeComplete);
+          router.events.off('routeChangeError', handleRouteChangeError);
+        }
         clearTimeout(timeoutId);
       };
     }, [
       loadingComponent,
       animateAfter,
       router,
-      children,
       shallowRouting,
       disableSameURL,
+      global,
     ]);
 
-    if (!children) {
+    if (global) {
+      if (addToChildren) {
+        return (
+          <>
+            {children}
+            {showLoading && currentLoadingComponent}
+          </>
+        );
+      }
       return showLoading && currentLoadingComponent ? (
         <>{currentLoadingComponent}</>
-      ) : null;
+      ) : (
+        <>{children}</>
+      );
     }
 
     return (
@@ -113,7 +149,10 @@ const LoadingBox = memo(
   (prevProps, nextProps) => {
     return (
       prevProps?.shallowRouting === nextProps?.shallowRouting &&
-      prevProps?.disableSameURL === nextProps?.disableSameURL
+      prevProps?.disableSameURL === nextProps?.disableSameURL &&
+      prevProps?.global === nextProps?.global &&
+      prevProps?.addToChildren === nextProps?.addToChildren &&
+      prevProps?.children === nextProps?.children
     );
   }
 );
