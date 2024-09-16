@@ -8,7 +8,7 @@ export const Header = () => {
         className="flex items-center justify-center p-6 lg:px-8  bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-lg"
         aria-label="Global"
       >
-        <div className="hidden lg:flex lg:gap-x-12">
+        <div className="flex gap-x-12">
           <Link
             href="/"
             className="text-sm font-semibold leading-6 text-gray-900"
