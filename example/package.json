@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "next": "14.2.7",
-    "next-loading-box": "^1.1.1",
+    "next-loading-box": "^1.1.2",
     "react": "^18",
     "react-dom": "^18"
   },
