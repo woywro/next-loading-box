@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { LoadingBox } from 'next-loading-box';
+import { LoadingBox } from '@/components';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 
@@ -7,12 +7,12 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   return (
-    <div className="h-full w-full flex items-center flex-col justify-center gap-3">
+    <div className="h-full w-full flex items-center flex-col justify-center gap-3 ">
       {/* Blur Background with Spinner */}
       <LoadingBox
         loadingComponent={
           <>
-            <div className="absolute inset-0 w-full h-full bg-white bg-opacity-90 z-10 filter blur-sm"></div>
+            <div className="absolute inset-0 w-full h-full bg-white bg-opacity-90 z-15 filter blur-sm"></div>
             <div className="absolute inset-0 flex items-center justify-center z-20">
               <div className="w-8 h-8 rounded-full animate-spin border-4 border-solid border-pink-500 border-t-transparent"></div>
             </div>

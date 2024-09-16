@@ -1,4 +1,3 @@
-import { LoadingBox } from 'next-loading-box';
 import { Header } from '@/components/Header';
 import { BlogPostSkeleton } from '@/components/blogPostSkeleton';
 import { ProductListSkeleton } from '@/components/ProductListSkeleton';
@@ -6,6 +5,7 @@ import { ProductDetailSkeleton } from '@/components/ProductDetailSkeleton';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
+import { LoadingBox } from '@/components';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showTopLoading, setShowTopLoading] = useState(true);
