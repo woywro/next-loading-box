@@ -1,9 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
-import { LoadingBox } from '@/components';
-import { Inter } from 'next/font/google';
+import { LoadingBox } from 'next-loading-box';
 import Link from 'next/link';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   return (

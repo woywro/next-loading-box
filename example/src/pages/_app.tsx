@@ -5,7 +5,7 @@ import { ProductDetailSkeleton } from '@/components/ProductDetailSkeleton';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
-import { LoadingBox } from '@/components';
+import { LoadingBox } from 'next-loading-box';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [showTopLoading, setShowTopLoading] = useState(true);

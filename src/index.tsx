@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { CSSProperties, memo, useEffect, useState } from 'react';
+import React, { CSSProperties, memo, useEffect, useState, useRef } from 'react';
 
 interface LoadingComponentConfig {
   path: string;
@@ -34,7 +34,96 @@ const LoadingBox = memo(
     const [currentLoadingComponent, setCurrentLoadingComponent] =
       useState<React.ReactNode | null>(null);
     const router = useRouter();
-    let timeoutId: NodeJS.Timeout;
+    const timeoutRef = useRef<NodeJS.Timeout>();
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleRouteChange = (
+      url: string,
+      { shallow }: { shallow: boolean }
+    ) => {
+      const currentUrl = router.asPath;
+      const isSameUrl = url === currentUrl;
+
+      if ((disableSameURL && isSameUrl) || (shallow && !shallowRouting)) {
+        return;
+      }
+
+      let componentToShow: React.ReactNode | null = null;
+
+      if (Array.isArray(loadingComponent)) {
+        const matchingConfig = loadingComponent.find((config) =>
+          matchPath(config.path, url)
+        );
+        if (matchingConfig) {
+          componentToShow = matchingConfig.component;
+        }
+      } else {
+        componentToShow = loadingComponent;
+      }
+
+      if (componentToShow) {
+        setCurrentLoadingComponent(componentToShow);
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+          setShowLoading(true);
+        }, animateAfter);
+      }
+    };
+
+    const handleRouteChangeEnd = () => {
+      clearTimeout(timeoutRef.current);
+      setShowLoading(false);
+      setCurrentLoadingComponent(null);
+    };
+
+    useEffect(() => {
+      const handleRouteChangeStart = (
+        url: string,
+        { shallow }: { shallow: boolean }
+      ) => {
+        handleRouteChange(url, { shallow });
+      };
+
+      if (global) {
+        router.events.on('routeChangeStart', handleRouteChangeStart);
+        router.events.on('routeChangeComplete', handleRouteChangeEnd);
+        router.events.on('routeChangeError', handleRouteChangeEnd);
+      } else {
+        const container = containerRef.current;
+        if (container) {
+          const links = container.getElementsByTagName('a');
+          Array.from(links).forEach((link) => {
+            link.addEventListener('click', (e) => {
+              const href = link.getAttribute('href');
+              if (href) {
+                e.preventDefault();
+                handleRouteChange(href, { shallow: false });
+                router
+                  .push(href)
+                  .then(handleRouteChangeEnd)
+                  .catch(handleRouteChangeEnd);
+              }
+            });
+          });
+        }
+      }
+
+      return () => {
+        if (global) {
+          router.events.off('routeChangeStart', handleRouteChangeStart);
+          router.events.off('routeChangeComplete', handleRouteChangeEnd);
+          router.events.off('routeChangeError', handleRouteChangeEnd);
+        }
+        clearTimeout(timeoutRef.current);
+      };
+    }, [
+      loadingComponent,
+      animateAfter,
+      router,
+      shallowRouting,
+      disableSameURL,
+      global,
+    ]);
 
     const matchPath = (pattern: string, path: string): boolean => {
       const patternParts = pattern.split('/');
@@ -50,74 +139,6 @@ const LoadingBox = memo(
         return part === pathParts[index];
       });
     };
-
-    useEffect(() => {
-      const handleRouteChangeStart = (
-        url: string,
-        { shallow }: { shallow: boolean }
-      ) => {
-        const currentUrl = router.asPath;
-        const isSameUrl = url === currentUrl;
-
-        if ((disableSameURL && isSameUrl) || (shallow && !shallowRouting)) {
-          return;
-        }
-
-        let componentToShow: React.ReactNode | null = null;
-
-        if (Array.isArray(loadingComponent)) {
-          const matchingConfig = loadingComponent.find((config) =>
-            matchPath(config.path, url)
-          );
-          if (matchingConfig) {
-            componentToShow = matchingConfig.component;
-          }
-        } else {
-          componentToShow = loadingComponent;
-        }
-
-        if (componentToShow) {
-          setCurrentLoadingComponent(componentToShow);
-          timeoutId = setTimeout(() => {
-            setShowLoading(true);
-          }, animateAfter);
-        }
-      };
-
-      const handleRouteChangeComplete = () => {
-        clearTimeout(timeoutId);
-        setShowLoading(false);
-        setCurrentLoadingComponent(null);
-      };
-
-      const handleRouteChangeError = () => {
-        clearTimeout(timeoutId);
-        setShowLoading(false);
-        setCurrentLoadingComponent(null);
-      };
-
-      if (global) {
-        router.events.on('routeChangeStart', handleRouteChangeStart);
-        router.events.on('routeChangeComplete', handleRouteChangeComplete);
-        router.events.on('routeChangeError', handleRouteChangeError);
-      }
-
-      return () => {
-        if (global) {
-          router.events.off('routeChangeStart', handleRouteChangeStart);
-          router.events.off('routeChangeComplete', handleRouteChangeComplete);
-          router.events.off('routeChangeError', handleRouteChangeError);
-        }
-        clearTimeout(timeoutId);
-      };
-    }, [
-      loadingComponent,
-      animateAfter,
-      router,
-      shallowRouting,
-      disableSameURL,
-      global,
-    ]);
 
     if (global) {
       if (addToChildren) {
@@ -137,6 +158,7 @@ const LoadingBox = memo(
 
     return (
       <div
+        ref={containerRef}
         style={{ position: 'relative', ...style }}
         className={className}
         id="loading-box"
